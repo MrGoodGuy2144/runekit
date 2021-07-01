@@ -9,7 +9,7 @@ Alt1-compatible toolbox for RuneScape 3, for Linux and macOS.
 
 ## Installing
 
-### Linux
+### Linux (this is out of date, clone and run from source instead)
 
 1. [Download RuneKit.AppImage](https://github.com/whs/runekit/releases/tag/continuous)
 2. Mark file as executable (`chmod +x`)
