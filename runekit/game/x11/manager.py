@@ -63,16 +63,22 @@ class X11GameManager(GameManager):
     def get_instances(self) -> List[GameInstance]:
         def visit(wid: int):
             if self.is_game(wid):
+                print(self, "is game")
+
                 if wid not in self._instances:
                     self.logger.info("Found game instance %d", wid)
                     instance = X11GameInstance(self, wid, parent=self)
                     self._instances[wid] = instance
+                else:
+                    print("WID error")
 
             try:
                 query = self.connection.core.QueryTree(wid).reply()
+
                 for child in query.children:
                     visit(child)
             except xcffib.xproto.WindowError:
+                print("xcffib.xproto.WindowError")
                 return
 
         visit(self.screen.root)
@@ -91,18 +97,32 @@ class X11GameManager(GameManager):
         try:
             wm_class = self.get_property(wid, xcffib.xproto.Atom.WM_CLASS)
         except xcffib.xproto.WindowError:
+            print("xcffib.xproto.WindowError")
             geom_req.discard_reply()
             return False
 
         geom = geom_req.reply()
+        
         if geom.width == 32 and geom.height == 32:
             # OpenGL test window
+            return False
+
+        if geom.width == 1 and geom.height == 1:
+            # Invisible windows
             return False
 
         if not wm_class:
             return False
 
+        if "rs2client.exe" not in wm_class:
+            return False
+        else:
+            print("Instance found!", wm_class)
+            print("Geom:", geom.width, ",", geom.height)
+            return True
+
         instance_name, app_name = wm_class.split("\00")
+        print("App name:", app_name)
         return app_name == WM_APP_NAME
 
     def get_active_window(self) -> int:

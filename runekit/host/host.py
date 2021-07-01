@@ -68,6 +68,8 @@ class Host:
 
         if not instance:
             instances = self.manager.get_instances()
+            print("Instances:", instances)
+
             if not instances:
                 QMessageBox.critical(
                     None,
