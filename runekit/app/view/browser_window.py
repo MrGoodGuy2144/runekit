@@ -43,16 +43,17 @@ class PageClass(QWebEnginePage):
         if not is_main_frame:
             return super().acceptNavigationRequest(url, type_, is_main_frame)
 
-        if (
-            type_ != QWebEnginePage.NavigationTypeTyped
-            and url.authority() != self.url().authority()
-        ):
-            # The web is only allowed pages on the same origin
-            # Cross origin pages would open in browser
-            if url.scheme() in ("http", "https"):
-                QDesktopServices.openUrl(url)
+        # This breaks AFK Warden popups
+        # if (
+        #     type_ != QWebEnginePage.NavigationTypeTyped
+        #     and url.authority() != self.url().authority()
+        # ):
+        #     # The web is only allowed pages on the same origin
+        #     # Cross origin pages would open in browser
+        #     if url.scheme() in ("http", "https"):
+        #         QDesktopServices.openUrl(url)
 
-            return False
+        #     return False
 
         return super().acceptNavigationRequest(url, type_, is_main_frame)
 
@@ -67,7 +68,7 @@ class BrowserWindow(GameSnapMixin, QMainWindow):
         super().__init__(**kwargs)
         self.app = app
 
-        if self.framed and sys.platform != "darwin":
+        if self.framed:
             self.setAttribute(Qt.WA_TranslucentBackground)
             self.frame = WindowFrame(parent=self)
             self.frame.on_exit.connect(self.close)

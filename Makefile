@@ -13,21 +13,24 @@ dist/runekit.tar.gz: main.py poetry.lock runekit/_resources.py $(wildcard runeki
 
 # Mac
 
-dist/RuneKitApp.app: main.py poetry.lock runekit/_resources.py $(wildcard runekit/**/*)
-	pyinstaller -w -n RuneKitApp \
+dist/RuneKit.app: RuneKit.spec main.py poetry.lock runekit/_resources.py $(wildcard runekit/**/*)
+	pyinstaller -w -n RuneKitApp --noconfirm \
 		--exclude-module tkinter \
 		-s -d noarchive \
 		--osx-bundle-identifier de.cupco.runekit \
 		$<
 
+dist/RuneKit.app.zip: dist/RuneKit.app
+	cd dist; zip -r -9 RuneKit.app.zip RuneKit.app
+
 # AppImage
 
-build/python3.9.5.AppImage:
+build/python3.9.7.AppImage:
 	mkdir build || true
-	wget https://github.com/niess/python-appimage/releases/download/python3.9/python3.9.5-cp39-cp39-manylinux1_x86_64.AppImage -O "$@"
+	wget https://github.com/niess/python-appimage/releases/download/python3.9/python3.9.7-cp39-cp39-manylinux1_x86_64.AppImage -O "$@"
 	chmod +x "$@"
 
-build/appdir: build/python3.9.5.AppImage
+build/appdir: build/python3.9.7.AppImage
 	$< --appimage-extract
 	mv squashfs-root build/appdir
 
