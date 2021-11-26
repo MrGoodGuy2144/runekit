@@ -1,5 +1,7 @@
 # RuneKit
 
+## This Fork only works with the Steam version of Runescape run via wine. It doesn't work with the native version
+
 [![No Maintenance Intended](https://unmaintained.tech/badge.svg)](https://unmaintained.tech/)
 
 Alt1-compatible toolbox for RuneScape 3, for Linux and macOS.
